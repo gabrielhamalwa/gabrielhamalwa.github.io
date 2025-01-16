@@ -33,6 +33,8 @@ jobs:
             echo "Creating gh-pages branch"
             git checkout --orphan gh-pages
             git reset --hard
+            git config user.name "GitHub Action"
+            git config user.email "action@github.com"
             git commit --allow-empty -m "Initial commit on gh-pages"
             git push origin gh-pages
           fi
