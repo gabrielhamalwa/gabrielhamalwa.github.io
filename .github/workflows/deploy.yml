@@ -13,11 +13,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js
+      # Step 2: Set up a compatible Node.js version
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18.18.0 # Use a compatible Node.js version
 
       # Step 3: Install dependencies and build the project
       - name: Install dependencies and build
@@ -25,7 +25,19 @@ jobs:
           npm install
           npm run build
 
-      # Step 4: Deploy the out folder to gh-pages branch
+      # Step 4: Ensure gh-pages branch exists
+      - name: Ensure gh-pages branch exists
+        run: |
+          git fetch
+          if ! git rev-parse --verify origin/gh-pages; then
+            echo "Creating gh-pages branch"
+            git checkout --orphan gh-pages
+            git reset --hard
+            git commit --allow-empty -m "Initial commit on gh-pages"
+            git push origin gh-pages
+          fi
+
+      # Step 5: Deploy the out folder to gh-pages branch
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
